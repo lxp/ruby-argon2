@@ -1,6 +1,10 @@
 # frozen_string_literal: true
 require 'argon2/constants'
-require 'argon2/ffi_engine'
+begin
+  require 'argon2/ffi_engine'
+rescue LoadError
+  require 'argon2/cext_engine'
+end
 require 'argon2/version'
 require 'argon2/errors'
 require 'argon2/engine.rb'

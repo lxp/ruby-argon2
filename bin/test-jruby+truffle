@@ -1,0 +1,7 @@
+#!/bin/bash
+set -euo pipefail
+IFS=$'\n\t'
+
+export GRAAL_HOME="$HOME/graalvm/sulong"
+
+TEST_CHECKS=3 "$HOME/graalvm/jruby/tool/jt.rb" run --graal --jexceptions -r ./.jruby\+truffle_bundle/bundler/setup.rb test/jruby+truffle/run.rb
