@@ -4,4 +4,4 @@ IFS=$'\n\t'
 
 export GRAAL_HOME="$HOME/graalvm/sulong"
 
-TEST_CHECKS=3 "$HOME/graalvm/jruby/tool/jt.rb" run --graal --jexceptions -r ./.jruby\+truffle_bundle/bundler/setup.rb test/jruby+truffle/run.rb
+TEST_CHECKS=3 "$HOME/graalvm/jruby/tool/jt.rb" run --graal --jexceptions -J-Xmx1G -r ./.jruby\+truffle_bundle/bundler/setup.rb test/jruby+truffle/run.rb
