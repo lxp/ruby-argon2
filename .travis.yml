@@ -1,10 +1,21 @@
-language: ruby
-rvm:
-  - 2.2.4
-  - 2.3.1
-  - jruby-9000
-before_install: gem install bundler -v 1.10.5
-install: bin/setup
+sudo: false
+language: java
+jdk:
+  - oraclejdk8
+install:
+  - mkdir "$HOME/graalvm" && cd "$HOME/graalvm"
+  - git clone --depth 1 https://github.com/graalvm/mx
+  - git clone --depth 1 https://github.com/graalvm/sulong
+  - git clone --depth 1 https://github.com/jruby/jruby
+  - wget https://github.com/dougxc/openjdk8-jvmci-builder/releases/download/jvmci-0.17/jdk1.8.0_91-jvmci-0.17-linux-amd64.tar.gz
+  - tar -xzf jdk1.8.0_91-jvmci-0.17-linux-amd64.tar.gz
+  - export PATH="`pwd`/mx:$PATH"
+  - export JAVA_HOME="`pwd`/jdk1.8.0_91-jvmci-0.17"
+  - cd "$HOME/graalvm/sulong" && mx build
+  - cd "$HOME/graalvm/jruby" && tool/jt.rb build
+  - export PATH="`pwd`/bin:$PATH"
+  - cd "$HOME/build/lxp/ruby-argon2" && bin/setup-jruby+truffle
 script:
-  - cd ext/argon2_wrap/ && make test && cd ../..
-  - CODECLIMATE_REPO_TOKEN=28e3d5d04f4ec87d0899784e6aecc13d7787343b2634b3c94fc1216993d443c2 rake test
+  - bin/test-jruby+truffle
+after_failure:
+  - find . -iname "*.log" -print0 | xargs -0 cat
