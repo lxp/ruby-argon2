@@ -1,0 +1,23 @@
+#!/bin/bash
+set -euo pipefail
+IFS=$'\n\t'
+
+if [ "$RUBY_STACK" = "jt" ]; then
+	mkdir "$HOME/graalvm" && cd "$HOME/graalvm"
+	git clone --depth 1 https://github.com/graalvm/mx
+	git clone --depth 1 https://github.com/graalvm/sulong
+	git clone --depth 1 https://github.com/jruby/jruby
+
+	wget https://github.com/dougxc/openjdk8-jvmci-builder/releases/download/jvmci-0.17/jdk1.8.0_91-jvmci-0.17-linux-amd64.tar.gz
+	tar -xzf jdk1.8.0_91-jvmci-0.17-linux-amd64.tar.gz
+	mv jdk1.8.0_91-jvmci-0.17 jdk
+
+	cd "$HOME/graalvm/sulong" && mx build
+	cd "$HOME/graalvm/jruby" && ./mvnw package
+
+	cd "$TRAVIS_BUILD_DIR"
+	bin/setup-jruby+truffle
+else
+	gem install bundler
+	bin/setup
+fi

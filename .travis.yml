@@ -1,21 +1,36 @@
 sudo: false
-language: java
-jdk:
-  - oraclejdk8
+
+language: ruby
+
+cache:
+  directories:
+    - $HOME/.m2
+
+matrix:
+  include:
+    - env: RUBY_STACK=jt PATH=$HOME/graalvm/jruby/bin:$HOME/graalvm/mx:$PATH JAVA_HOME=$HOME/graalvm/jdk
+    - rvm: 2.3.1
+      env: RUBY_STACK=rvm
+    - rvm: jruby-9.1.2.0
+      jdk: oraclejdk8
+      env: RUBY_STACK=rvm
+    - rvm: jruby-head
+      jdk: oraclejdk8
+      env: RUBY_STACK=rvm
+    - rvm: 2.2.5
+      env: RUBY_STACK=rvm
+
+env:
+  global: TEST_CHECKS=3
+
+before_install:
+  - unset JRUBY_OPTS
+
 install:
-  - mkdir "$HOME/graalvm" && cd "$HOME/graalvm"
-  - git clone --depth 1 https://github.com/graalvm/mx
-  - git clone --depth 1 https://github.com/graalvm/sulong
-  - git clone --depth 1 https://github.com/jruby/jruby
-  - wget https://github.com/dougxc/openjdk8-jvmci-builder/releases/download/jvmci-0.17/jdk1.8.0_91-jvmci-0.17-linux-amd64.tar.gz
-  - tar -xzf jdk1.8.0_91-jvmci-0.17-linux-amd64.tar.gz
-  - export PATH="`pwd`/mx:$PATH"
-  - export JAVA_HOME="`pwd`/jdk1.8.0_91-jvmci-0.17"
-  - cd "$HOME/graalvm/sulong" && mx build
-  - cd "$HOME/graalvm/jruby" && tool/jt.rb build
-  - export PATH="`pwd`/bin:$PATH"
-  - cd "$HOME/build/lxp/ruby-argon2" && bin/setup-jruby+truffle
+  - bin/travis-setup
+
 script:
-  - bin/test-jruby+truffle
+  - if [ "$RUBY_STACK" = "jt" ]; then bin/test-jruby+truffle; else ruby test/jruby+truffle/run.rb; fi
+
 after_failure:
   - find . -iname "*.log" -print0 | xargs -0 cat

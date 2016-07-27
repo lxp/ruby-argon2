@@ -3,5 +3,6 @@ set -euo pipefail
 IFS=$'\n\t'
 
 export GRAAL_HOME="$HOME/graalvm/sulong"
+export TEST_CHECKS="${TEST_CHECKS-3}"
 
-TEST_CHECKS=3 "$HOME/graalvm/jruby/tool/jt.rb" run --graal --jexceptions -J-Xmx1G -r ./.jruby\+truffle_bundle/bundler/setup.rb test/jruby+truffle/run.rb
+"$HOME/graalvm/jruby/tool/jt.rb" run --graal --jexceptions -J-Xmx1G -r ./.jruby\+truffle_bundle/bundler/setup.rb test/jruby+truffle/run.rb
