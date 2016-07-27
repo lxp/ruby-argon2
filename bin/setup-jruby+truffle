@@ -3,12 +3,7 @@ set -euo pipefail
 IFS=$'\n\t'
 
 export SULONG_HOME="$HOME/graalvm/sulong"
-export RUBY_HOME="$HOME/graalvm/jruby"
-export GEM_HOME="`pwd`"
+export JRUBY_HOME="$HOME/graalvm/jruby"
 
-"$RUBY_HOME/bin/gem" install bundler
-"$RUBY_HOME/bin/jruby+truffle" setup
-
-cd "$RUBY_HOME"
-tool/jt.rb cextc "$GEM_HOME"
-cd "$GEM_HOME"
+"$JRUBY_HOME/bin/gem" install bundler
+"$JRUBY_HOME/bin/jruby+truffle" setup
