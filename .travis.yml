@@ -21,7 +21,7 @@ matrix:
       env: RUBY_STACK=rvm
 
 env:
-  global: TEST_CHECKS=3
+  global: TEST_CHECKS=1
 
 before_install:
   - unset JRUBY_OPTS
