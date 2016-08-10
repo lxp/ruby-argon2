@@ -1,8 +1,6 @@
 JRUBY_HOME = ENV['JRUBY_HOME']
 
 if JRUBY_HOME
-	GEM_HOME = File.expand_path('../../..', __FILE__)
-	ENV['GEM_HOME'] = GEM_HOME
-
-	system(File.join(JRUBY_HOME, 'tool/jt.rb') + ' cextc ' + GEM_HOME)
+	project_root = File.expand_path('../../..', __FILE__)
+	exec("#{JRUBY_HOME}/tool/jt.rb", 'cextc', project_root)
 end
